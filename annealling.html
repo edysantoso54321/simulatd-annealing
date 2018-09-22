@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>annealling</title>
+</head>
+<body>
+	<h3>Annealling</h3>
+	<p id="x1">x1 = </p>
+	<p id="x2">x2 = </p>
+	<p id="hasil">hasil = </p>
+	<p id="t">T awal = </p>
+	<p id="takhir">T akhir = </p>
+	<button onclick="annealling()">click to run</button>
+
+
+<script>
+function fungsi(x1,x2){
+	return -Math.abs(Math.sin(x1)*Math.cos(x2)*Math.exp(Math.abs(1-(Math.sqrt((x1*x1)+(x2*x2))/Math.PI))));
+}
+function generate(){
+	var x1=Math.random()*20 + -10;
+	var x2=Math.random()*20 + -10;
+	return [x1,x2,fungsi(x1,x2)];
+}
+function isprob(a,b){
+	return Math.exp(-a/b)>Math.random();
+}
+function ceking(x,y,t){
+	var deltae=y[2]-x[2];
+	if ((deltae<0) || (isprob(deltae,t))){
+		x=y;
+	}
+	return x;
+}
+function revisi(i,t,deltat){
+	if ((i%21==0) && (t>deltat)){
+		t-=deltat;
+	}
+	return t;
+}
+function annealling() {
+	var deltat=0.167;
+	var tawal=91;
+	var t=tawal;
+	var i=1000000;
+	var awal=generate();
+	while(i>0){
+		awal=ceking(awal,generate(),t);
+		t=revisi(i,t,deltat);
+		i-=1;
+}
+    document.getElementById("x1").innerHTML ="x1 = "+awal[0].toString();
+    document.getElementById("x2").innerHTML ="x2 = "+awal[1].toString();
+    document.getElementById("hasil").innerHTML ="hasil = "+awal[2].toString();
+    document.getElementById("t").innerHTML ="T awal = "+(tawal).toString();
+    document.getElementById("takhir").innerHTML ="T akhir = "+(t).toString();
+}
+</script>
+</body>
+</html>
